@@ -1,5 +1,9 @@
 (ns todolist.core
-  (:require 
+  (:require [todolist.item.model :as items]
+            [todolist.item.handler :refer [handle-index-items
+                                         handle-create-item
+                                         handle-delete-item
+                                         handle-update-item]]
             
        
             ;; ring.adapter.jetty is an adapter we can use in dev and production
@@ -16,17 +20,45 @@
             ;; It's useful as a debugging tool
             [ring.handler.dump :refer [handle-dump]]))
 
-(defn greet [req]
-  {:status 200
-   :body "Hello, world!"
-   :headers {}})
+(def db (or (System/getenv "DATABASE_URL")
+            "jdbc:postgresql://localhost/todolist"))
 
-(defroutes app
-  (GET "/" [] greet)
+(defroutes routes
+  (GET "/" [] handle-index-items)
+  (POST "/" [] handle-create-item)
+  (DELETE "/:item-id" [] handle-delete-item)
+  (PUT "/:item-id" [] handle-update-item)
   (not-found "Page not found"))
 
+(defn wrap-db [hdlr]
+  (fn [req]
+    (hdlr (assoc req :webdev/db db))))
+
+(def sim-methods {"PUT" :put
+                  "DELETE" :delete})
+
+(defn wrap-simulated-method [hdlr]
+  (fn [req]
+    (if-let [method (and (= :post (:request-method req))
+                         (sim-methods (get-in req [:params "_method"])))]
+      (hdlr (assoc req :request-method method))
+      (hdlr req))))
+
+(def app
+  (wrap-file-info
+   (wrap-resource
+    (wrap-db
+     (wrap-params
+      (wrap-simulated-method
+       routes)))
+    "static")))
+
 (defn -main [port]
+  (items/create-table db)
   (jetty/run-jetty app {:port (Integer. port)}))
 
 (defn -dev-main [port]
+  (items/create-table db)
   (jetty/run-jetty (wrap-reload #'app) {:port (Integer. port)}))
+
+
