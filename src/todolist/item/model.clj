@@ -19,17 +19,11 @@
                            RETURNING id"
                          description]))))
 
-(defn read-date-created [db]
+(defn read-table [db]
   (db/query db
             ["SELECT id, description, checked, priority, date_created
               FROM items
-              ORDER BY date_created"]))
-
-(defn read-priority [db]
-  (db/query db
-            ["SELECT id, description, checked, priority, date_created
-              FROM items
-              ORDER BY priority"]))
+              ORDER BY checked, date_created"]))
 
 (defn update-checked [db id checked]
   (= [1] (db/execute! db

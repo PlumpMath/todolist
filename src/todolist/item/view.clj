@@ -30,10 +30,11 @@
           [:button.btn.btn-xs
            (if priority [:span.glyphicon.glyphicon-star] [:span.glyphicon.glyphicon-star-empty] )]]]))
 
-(defn update-checked [text checked]
-  (if checked
-    [:del text]
-    text))
+(defn update-text [text checked priority]
+  (cond
+   checked [:del text]
+   priority [:strong [:mark text]]
+   :else  text))
 
 (defn delete-form [id]
   (html [:form
@@ -57,7 +58,7 @@
           [:style "* {box-sizing: border-box}"]]
          [:body
           [:div.container
-           [:div.jumbotron.text-center 
+           [:div.jumbotron.bg-info.text-center 
             [:h1 "Mis tareas"]]]
           [:div.container
            [:div.row
@@ -75,7 +76,7 @@
                  [:td.text-center (update-checked-form (:id i) (:checked i))]
                  [:td.text-center (update-priority-form (:id i) (:priority i))]
                  [:td.text-center "tag"]
-                 [:td (update-checked (:description i) (:checked i))]
+                 [:td (update-text (:description i) (:checked i) (:priority i))]
                  [:td.text-center (delete-form (:id i))]])
               ]]]
            [:div.row
