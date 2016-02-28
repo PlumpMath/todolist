@@ -1,6 +1,10 @@
 # todolist
 
-A Clojure library designed to ... well, that part is up to you.
+A simple to do list.
+
+An excercise to practice with clojure, postgreSQL, hiccup, bootstrap.
+
+Deployed to heroku here: [http://procrastinelist.herokuapp.com/]
 
 ## Usage
 
