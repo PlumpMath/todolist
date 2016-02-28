@@ -15,7 +15,7 @@
                   :name "checked"
                   :value (if checked "false" "true")}]
          [:div.btn-group
-          [:button.btn.btn-xs
+          [:button.btn.btn-xs.btn-default {:aria-label "Checked"}
            (if checked [:span.glyphicon.glyphicon-check] [:span.glyphicon.glyphicon-unchecked] )]]]))
 
 (defn update-priority-form [id priority]
@@ -27,7 +27,7 @@
                   :name "priority"
                   :value (if priority "false" "true")}]
          [:div.btn-group
-          [:button.btn.btn-xs
+          [:button.btn.btn-xs.btn-default {:aria-label "Priority"}
            (if priority [:span.glyphicon.glyphicon-star] [:span.glyphicon.glyphicon-star-empty] )]]]))
 
 (defn update-text [text checked priority]
@@ -48,12 +48,13 @@
 
 
 (defn items-page [items]
-  (html5 {:lang :en}
+  (html5 {:lang :es}
          [:head
           [:title "Mis tareas"]
+          [:meta {:http-equiv "Content-Type" :content "text/html; charset=utf-8"}]
           [:meta {:name :viewport
                   :content "width=device-width, initial-scale=1.0"}]
-          [:link {:href "/bootstrap/css/bootstrap.min.css"
+          [:link {:href "/bootstrap/css/bootstrap.css"
                   :rel :stylesheet}]
           [:style "* {box-sizing: border-box}"]]
          [:body
@@ -62,11 +63,11 @@
             [:h1 "Mis tareas"]]]
           [:div.container
            [:div.row
-            [:table.table.table-striped
+            [:table.table
              [:thead
               [:tr
-               [:th.col-sm-1.text-center "Hecho"]
-               [:th.col-sm-1.text-center [:span.glyphicon.glyphicon-star-empty]]
+               [:th.col-sm-1.text-center [:span.glyphicon.glyphicon-check]]
+               [:th.col-sm-1.text-center [:span.glyphicon.glyphicon-star]]
                [:th.col-sm-1.text-center "Tag"]
                [:th.col-sm-8 "Tarea"]
                [:th.col-sm-1.text-center [:span.glyphicon.glyphicon-trash]]]]
@@ -85,11 +86,6 @@
               [:tr
                [:form.form-inline
                 {:method "POST" :action "/"}
-                [:td.col-sm-1.text-center [:div.form-group
-                                           [:input.btn.btn-success.btn-xs
-                                            {:type :submit
-                                             :value "Nueva Tarea"}]]]
-                [:td.col-sm-1.text-center "tag"]
                 [:td.col-sm-10.text-center [:div.form-group
                                             [:label.control-label.sr-only {:for :desc-input} "Tarea"]
                                             ;; sr.only es para que el label no se vea. Es conveniente añadir
@@ -97,28 +93,14 @@
                                             [:input#desc-input.form-control
                                              ;; .form-control hace que el input tenga el 100% de ancho
                                              {:name :description
-                                              :placeholder "Escribe aquí para añadir una nueva tarea"}]]]]]]]]]
+                                              :placeholder "Escribe aquí para añadir una nueva tarea"}]]]
+                [:td.col-sm-1.text-center [:div.form-group
+                                           [:input.btn.btn-success.btn-md
+                                            {:type :submit
+                                             :value "Crear Tarea"}]]]]]]]]]
 
           [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"}]
-          [:script {:src "/bootstrap/js/bootstrap.min.js"}]]))
+          [:script {:src "/bootstrap/js/bootstrap.js"}]]))
 
 
-#_(defn new-item []
-  (html
-   [:form.form-inline
-    {:method "POST" :action "/"}
-    [:td.col-sm-1.text-center
-     [:div.form-group
-      [:input.btn.btn-success.btn-xs
-       {:type :submit
-        :value "Nueva Tarea"}]]]
-    [:td.col-sm-1.text-center ""]
-    [:td.col-sm-1.text-center ""]
-    [:td.col-sm-9.text-center
-     [:div.form-group
-      [:label.control-label.sr-only {:for :desc-input} "Tarea"]
-      [:input#desc-input.form-control
-       {:name :description
-        :placeholder "Escribe aquí para añadir una nueva tarea"}]]]
-    
-    ]))
+

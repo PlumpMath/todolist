@@ -23,7 +23,7 @@
   (db/query db
             ["SELECT id, description, checked, priority, date_created
               FROM items
-              ORDER BY checked, date_created"]))
+              ORDER BY checked, priority DESC, date_created"]))
 
 (defn read-column [db id column]
   (db/query db
