@@ -1,6 +1,7 @@
 (ns todolist.item.handler
   (:require [todolist.item.model :refer [create-item
                                          read-table
+                                         read-column
                                          update-checked
                                          update-priority
                                          delete-item]]
@@ -37,24 +38,29 @@
 (defn handle-update [req]
   (let [db (:webdev/db req)
         item-id (java.util.UUID/fromString (:item-id (:route-params req)))
-        action (:action (:route-params req))]
+        action (:action (:route-params req))
+        checked (get-in req [:params "checked"])
+        priority (get-in req [:params "priority"])]
     (case action
-      "check" (let [checked (get-in req [:params "checked"])
-                    ;; priority (get-in req [:params "priority"]
-                    exists? (update-checked db item-id (= "true" checked))]
+      "check" (let [exists? (update-checked db item-id (= "true" checked))]
                 (if exists?
-                  {:status 302
-                   :headers {"Location" "/"}
-                   :body ""}
+                  (do
+                    (if (read-column db item-id "priority")
+                      (update-priority db item-id false))
+                    {:status 302
+                     :headers {"Location" "/"}
+                     :body ""})
                   {:status 404
                    :headers {}
                    :body "Item not found."}))
-      "prior" (let [priority (get-in req [:params "priority"])
-                    exists? (update-priority db item-id (= "true" priority))]
+      "prior" (let [exists? (update-priority db item-id (= "true" priority))]
                 (if exists?
-                  {:status 302
-                   :headers {"Location" "/"}
-                   :body ""}
+                  (do
+                    (if (read-column db item-id "checked")
+                      (update-checked db item-id false))
+                    {:status 302
+                     :headers {"Location" "/"}
+                     :body ""})
                   {:status 404
                    :headers {}
                    :body "Item not "})))))

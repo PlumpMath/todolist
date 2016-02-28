@@ -25,6 +25,13 @@
               FROM items
               ORDER BY checked, date_created"]))
 
+(defn read-column [db id column]
+  (db/query db
+            ["SELECT ? FROM items
+              WHERE id = ?"
+             column
+             id]))
+
 (defn update-checked [db id checked]
   (= [1] (db/execute! db
                      ["UPDATE items
