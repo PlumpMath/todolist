@@ -4,7 +4,7 @@ A simple to do list.
 
 An excercise to practice with clojure, postgreSQL, hiccup, bootstrap.
 
-Deployed to heroku here: [http://procrastinelist.herokuapp.com/]
+Deployed to heroku here: http://procrastinelist.herokuapp.com/
 
 ## Usage
 
