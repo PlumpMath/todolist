@@ -3,7 +3,7 @@
             [todolist.item.handler :refer [handle-index-items
                                          handle-create-item
                                          handle-delete-item
-                                         handle-update-item]]
+                                         handle-update]]
             
        
             ;; ring.adapter.jetty is an adapter we can use in dev and production
@@ -27,7 +27,7 @@
   (GET "/" [] handle-index-items)
   (POST "/" [] handle-create-item)
   (DELETE "/:item-id" [] handle-delete-item)
-  (PUT "/:item-id" [] handle-update-item)
+  (PUT "/:action/:item-id" [] handle-update)
   (not-found "Page not found"))
 
 (defn wrap-db [hdlr]
@@ -40,8 +40,13 @@
 (defn wrap-simulated-method [hdlr]
   (fn [req]
     (if-let [method (and (= :post (:request-method req))
+                         ;; Si se cumple esto el resultado es true
                          (sim-methods (get-in req [:params "_method"])))]
+                         ;; De aquí sacamos "PUT" o "DELETE" y es el valor 
+                         ;; que asquiere method si lo anterior es true
       (hdlr (assoc req :request-method method))
+      ;;Aquí es donde hacemos el truco. Modificamos el :request-method de
+      ;; :post a :put o :delete
       (hdlr req))))
 
 (def app

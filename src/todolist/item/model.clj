@@ -34,16 +34,16 @@
 (defn update-checked [db id checked]
   (= [1] (db/execute! db
                      ["UPDATE items
-                 SET checked = ?
-                 WHERE id = ?"
+                      SET checked = ?
+                       WHERE id = ?"
                       checked
                       id])))
 
 (defn update-priority [db id priority]
   (= [1] (db/execute! db
                      ["UPDATE items
-                 SET priority = ?
-                 WHERE id = ?"
+                      SET priority = ?
+                      WHERE id = ?"
                       priority
                       id])))
 
