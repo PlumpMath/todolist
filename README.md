@@ -8,7 +8,8 @@ Deployed to heroku here: http://procrastinelist.herokuapp.com/
 
 ## Usage
 
-FIXME
+To run locally
+`lein run 8000`
 
 ## License
 
