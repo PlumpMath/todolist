@@ -1,9 +1,9 @@
 (ns todolist.core
   (:require [todolist.item.model :as items]
             [todolist.item.handler :refer [handle-index-items
-                                         handle-create-item
-                                         handle-delete-item
-                                         handle-update]]
+                                           handle-create-item
+                                           handle-delete-item
+                                           handle-update]]
             
        
             ;; ring.adapter.jetty is an adapter we can use in dev and production
